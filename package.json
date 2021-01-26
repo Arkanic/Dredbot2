@@ -4,7 +4,7 @@
   "description": "dredbot, re-written",
   "main": "build/server.js",
   "scripts": {
-    "build": "tsc src/server.ts",
+    "build": "tsc",
     "prod": "npm run build && node build/server.js"
   },
   "repository": {
@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Arkanic/dredbot2#readme",
   "dependencies": {
     "@types/node": "^14.14.22",
+    "@types/ws": "^7.4.0",
     "discord.js": "^12.5.1",
     "enmap": "^5.8.4",
     "ts-node": "^9.1.1",

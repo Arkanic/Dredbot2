@@ -9,7 +9,7 @@ const config = require("../config.json");
 const client:Client = new Client(config);
 client.commands = new Discord.Collection();
 
-const commands:any = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));
+const commands:any = fs.readdirSync(__dirname + "/commands").filter(file => file.endsWith(".js"));
 for(const file of commands) {
     const command = require(`./commands/${file}`);
     client.commands.set(command.name, command);
@@ -23,6 +23,7 @@ client.once("disconnect", () => {
 client.on("message", async message => {
     if(!message.guild) return;
     let prefix = config.prefix;
+    if(!message.content.startsWith(prefix)) return;
 
     let args = message.content.slice(prefix.length).split(/ +/);
     const commandName = args.shift()!.toLowerCase();
@@ -38,6 +39,5 @@ client.on("message", async message => {
         console.log(error);
     }
 });
-
 
 client.login(config.key);
