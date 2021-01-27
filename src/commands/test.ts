@@ -1,7 +1,7 @@
 module.exports = {
     name: "test",
-    execute(cache:{[unit:string]:any}) {
-        let {message} = cache;
+    execute(resources:{[unit:string]:any}) {
+        let {message} = resources;
         message.channel.send("hi");
     }
 }

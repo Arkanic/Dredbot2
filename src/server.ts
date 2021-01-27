@@ -39,7 +39,7 @@ client.on("message", async message => {
     }
 
     try {
-        await command!.execute({message, client});
+        await command!.execute({message, client, cache, prefix});
         console.log(`[${new Date().toUTCString()}] Command "${commandName}" executed in "${message.guild.name}"`);
     } catch(error) {
         message.channel.send(`\`\`\`${error}\`\`\``);
@@ -56,7 +56,6 @@ let shipGetter = new ShipGetter((ships) => {
     for(let i in ships) {
         cache.leaderboard.push(ships[i]);
     }
-    console.log(`Got ships chunk (${ships[ships.length-1].score}) is the new offset`);
 }, (endOffset) => {
     // on finish
     console.log(`Finished collecting ships, ended at offset ${endOffset}`);
