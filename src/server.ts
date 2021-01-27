@@ -56,7 +56,7 @@ let shipGetter = new ShipGetter((ships) => {
     for(let i in ships) {
         cache.leaderboard.push(ships[i]);
     }
-    console.log("Got ships chunk");
+    console.log(`Got ships chunk (${ships[ships.length-1].score}) is the new offset`);
 }, () => {
     // on finish
     console.log("Finished collecting ships");
