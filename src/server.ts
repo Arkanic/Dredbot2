@@ -3,6 +3,8 @@ import Enmap from "enmap";
 import fs from "fs";
 
 import Client from "./handler/client";
+import ShipGetter from "./cache/leaderboard";
+import leaderboard from "./cache/leaderboard";
 
 const config = require("../config.json");
 
@@ -44,5 +46,21 @@ client.on("message", async message => {
         console.log(error);
     }
 });
+
+let cache:{[unit:string]:any} = {
+    leaderboard: []
+};
+
+let shipGetter = new ShipGetter((ships) => {
+    // on chunk
+    for(let i in ships) {
+        cache.leaderboard.push(ships[i]);
+    }
+    console.log("Got ships chunk");
+}, () => {
+    // on finish
+    console.log("Finished collecting ships");
+});
+shipGetter.getShips();
 
 client.login(config.key);

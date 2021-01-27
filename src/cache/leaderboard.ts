@@ -2,10 +2,10 @@ import needle from "needle";
 
 export default class {
     handleFinish:() => void;
-    handleChunk:(ships:{[unit:string]:any}) => void;
+    handleChunk:(ships:Array<any>) => void;
     url:string;
 
-    constructor(onFinish:() => void, onChunk:(ships:{[unit:string]:any}) => void) {
+    constructor(onChunk:(ships:{[unit:string]:any}) => void, onFinish:() => void) {
         this.handleFinish = onFinish;
         this.handleChunk = onChunk;
         this.url = "https://master.drednot.io/api/scoreboard";
@@ -22,7 +22,7 @@ export default class {
 
     private cycleShipsChunk(offset_score:number):void {
         this.getShipsChunk(offset_score).then(rawShips => {
-            let ships:{[unit:string]:any} = {};
+            let ships:Array<any> = [];
             let position = 1;
             for(let i in rawShips) {
                 ships.push({
