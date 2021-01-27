@@ -22,6 +22,9 @@ client.once("disconnect", () => {
 
 client.on("message", async message => {
     if(!message.guild) return;
+    if(message.author.bot) return;
+
+
     let prefix = config.prefix;
     if(!message.content.startsWith(prefix)) return;
 
@@ -29,7 +32,9 @@ client.on("message", async message => {
     const commandName = args.shift()!.toLowerCase();
     const command = client.commands.get(commandName);
 
-    if(message.author.bot) return;
+    if(!command) {
+        return message.react("🤔");
+    }
 
     try {
         await command!.execute({message, client});
