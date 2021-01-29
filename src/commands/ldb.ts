@@ -11,7 +11,7 @@ function limitString(string:string, length:number):string {
     return string.substring(0, length);
 }
 function shipString(ship:Ship):string {
-    return `\n**${ship.position}** \`${ship.name} {${ship.hex}}\` (${commaNumber(ship.score)}pts)`;
+    return `\n**${commaNumber(ship.position)}** \`${ship.name} {${ship.hex}}\` (${commaNumber(ship.score)}pts)`;
 }
 
 let ldb = {
