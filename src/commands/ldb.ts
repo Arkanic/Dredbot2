@@ -39,9 +39,6 @@ let ldb = {
             }
             
             loadingMessage.delete();
-            if(!cache.leaderboard.finished) {
-                message.channel.send(`**Note: Dredbot is still collecting ships, and any ship with less than ${commaNumber(cache.leaderboard.currentOffset)} points will not be shown.**`);
-            }
             message.channel.send(msg || "**[No Results]**");
         });
     }

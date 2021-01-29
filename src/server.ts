@@ -42,7 +42,9 @@ client.on("message", async message => {
     }
 
     try {
-        let resources:ResourcesObject = {message, client, cache, prefix}
+        let resources:ResourcesObject = {message, client, cache, prefix};
+        if(!cache.leaderboard.finished) {
+        }
         await command!.execute(resources);
         console.log(`[${new Date().toUTCString()}] Command "${commandName}" executed in "${message.guild.name}"`);
     } catch(error) {
