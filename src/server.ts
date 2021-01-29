@@ -44,6 +44,7 @@ client.on("message", async message => {
     try {
         let resources:ResourcesObject = {message, client, cache, prefix};
         if(!cache.leaderboard.finished) {
+            message.channel.send(`**Note: Dredbot is still collecting ships, and any ship with less than ${cache.leaderboard.currentOffset} points in any ship-realted command will not be shown.**`);
         }
         await command!.execute(resources);
         console.log(`[${new Date().toUTCString()}] Command "${commandName}" executed in "${message.guild.name}"`);
