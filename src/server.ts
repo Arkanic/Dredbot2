@@ -70,5 +70,11 @@ let shipGetter = new ShipGetter((ships) => {
     console.log(`Finished collecting ships, ended at offset ${endOffset}`);
 });
 shipGetter.getShips();
+setInterval(() => {
+    cache.leaderboard.ships = [];
+    cache.leaderboard.finished = false;
+    cache.leaderboard.currentOffset = 0;
+    shipGetter.getShips();
+}, 1000*60*60)
 
 client.login(config.key);
