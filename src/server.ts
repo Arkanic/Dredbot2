@@ -6,6 +6,9 @@ import Client from "./handler/client";
 import ShipGetter from "./cache/leaderboard";
 import leaderboard from "./cache/leaderboard";
 
+import Cache from "./interfaces/cache";
+import ResourcesObject from "./interfaces/resourcesObject";
+
 const config = require("../config.json");
 
 const client:Client = new Client(config);
@@ -39,7 +42,8 @@ client.on("message", async message => {
     }
 
     try {
-        await command!.execute({message, client, cache, prefix});
+        let resources:ResourcesObject = {message, client, cache, prefix}
+        await command!.execute(resources);
         console.log(`[${new Date().toUTCString()}] Command "${commandName}" executed in "${message.guild.name}"`);
     } catch(error) {
         message.channel.send(`\`\`\`${error}\`\`\``);
@@ -47,7 +51,7 @@ client.on("message", async message => {
     }
 });
 
-let cache:{[unit:string]:any} = {
+let cache:Cache = {
     leaderboard: []
 };
 
