@@ -39,7 +39,7 @@ let ldb = {
             }
             
             loadingMessage.delete();
-            message.channel.send(msg);
+            message.channel.send(msg || "**[No Results]**");
         });
     }
 }
