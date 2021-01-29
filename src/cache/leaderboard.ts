@@ -5,11 +5,13 @@ export default class {
     handleFinish:(endOffset:number) => void;
     handleChunk:(ships:Array<Ship>) => void;
     url:string;
+    position:number;
 
     constructor(onChunk:(ships:Array<Ship>) => void, onFinish:(endOffset:number) => void) {
         this.handleFinish = onFinish;
         this.handleChunk = onChunk;
         this.url = "https://master.drednot.io/api/scoreboard";
+        this.position = 1;
     }
 
     private getShipsChunk(offset_score:number):Promise<{[unit:string]:any}> {
@@ -24,16 +26,15 @@ export default class {
     private cycleShipsChunk(offset_score:number):void {
         this.getShipsChunk(offset_score).then(rawShips => {
             let ships:Array<Ship> = [];
-            let position = 1;
             for(let i in rawShips) {
                 ships.push({
                     name:rawShips[i].ship_name,
                     hex:rawShips[i].hex_code,
                     color:rawShips[i].color,
                     score:rawShips[i].score,
-                    position
+                    position: this.position
                 });
-                position++;
+                this.position++;
             }
             this.handleChunk(ships);
             let newOffset = ships[ships.length-1].score;
