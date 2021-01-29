@@ -23,7 +23,7 @@ let ldb = {
             let query:string = message.content.substring(prefix.length + ldb.name.length + 1);
 
             let matches:Array<Ship> = [];
-            matches = cache.leaderboard.filter(function(s:Ship) {
+            matches = cache.leaderboard.ships.filter(function(s:Ship) {
                 return s.name.toLowerCase().includes(query.toLowerCase());
             });
 
@@ -39,6 +39,9 @@ let ldb = {
             }
             
             loadingMessage.delete();
+            if(!cache.leaderboard.finished) {
+                message.channel.send(`**Note: Dredbot is still collecting ships, and any ship with less than ${commaNumber(cache.leaderboard.currentOffset)} points will not be shown.**`);
+            }
             message.channel.send(msg || "**[No Results]**");
         });
     }

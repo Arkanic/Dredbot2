@@ -1,5 +1,5 @@
-import Ship from "./ship";
+import Leaderboard from "./leaderboard";
 
 export default interface Cache {
-    leaderboard:Array<Ship>;
+    leaderboard:Leaderboard;
 }
