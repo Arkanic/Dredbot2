@@ -34,7 +34,7 @@ let ldb = {
                 if((msg + msgLine).length <= 2000) {
                     msg += msgLine;
                 } else {
-                    continue;
+                    break;
                 }
             }
             
