@@ -59,7 +59,7 @@ client.on("message", async message => {
         if(!cache.leaderboard.finished) {
             message.channel.send(`**Dredbot is still collecting ships, and any ship with less than ${cache.leaderboard.currentOffset} points will not be shown by any ship-related command.**`);
         } else {
-            message.channel.send(`**Ships last updated ${millisecondsToMinSeconds(Date.now() - cache.leaderboard.last.finishedTime)} minutes ago.**`);
+            message.channel.send(`**Ships last updated ${millisecondsToMinSeconds(Date.now() - cache.leaderboard.last.finishedTime)} ago.**`);
         }
         await command!.execute(resources);
         console.log(`[${new Date().toUTCString()}] Command "${commandName}" executed in "${message.guild.name}"`);
