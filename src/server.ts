@@ -58,7 +58,8 @@ let cache:Cache = {
     leaderboard: {
         ships: [],
         finished: false,
-        currentOffset:0
+        currentOffset:0,
+        lastFinished:0
     }
 };
 
@@ -70,6 +71,7 @@ let shipGetter = new ShipGetter((ships) => {
     cache.leaderboard.currentOffset = ships[ships.length-1].score;
 }, (endOffset) => {
     // on finish
+    cache.leaderboard.lastFinished = Date.now();
     console.log(`Finished collecting ships, ended at offset ${endOffset}`);
 });
 shipGetter.getShips();
