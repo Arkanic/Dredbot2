@@ -57,7 +57,7 @@ client.on("message", async message => {
     try {
         let resources:ResourcesObject = {message, client, cache, prefix};
         if(!cache.leaderboard.finished) {
-            message.channel.send(`**Note: Dredbot is still collecting ships, and any ship with less than ${cache.leaderboard.currentOffset} points in any ship-realted command will not be shown.**`);
+            message.channel.send(`**Dredbot is still collecting ships, and any ship with less than ${cache.leaderboard.currentOffset} points will not be shown by any ship-related command.**`);
         } else {
             message.channel.send(`**Ships last updated ${millisecondsToMinSeconds(Date.now() - cache.leaderboard.last.finishedTime)} minutes ago.**`);
         }
