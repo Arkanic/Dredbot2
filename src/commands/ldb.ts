@@ -40,10 +40,6 @@ let ldb = {
             
             loadingMessage.delete();
             message.channel.send(msg || "**[No Results]**");
-            if(cache.leaderboard.finished) {
-                let date = new Date(cache.leaderboard.last.finishedTime);
-                message.channel.send(`Ships last updated at \`${date.toString()}\``);
-            }
         });
     }
 }

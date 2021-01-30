@@ -14,6 +14,19 @@ const config = require("../config.json");
 const client:Client = new Client(config);
 client.commands = new Discord.Collection();
 
+function millisecondsToMinSeconds(duration:number):string {
+    let milliseconds = Math.floor((duration % 1000) / 100);
+    let seconds = Math.floor((duration / 1000) % 60);
+    let minutes = Math.floor((duration / (1000 * 60)) % 60);
+    let hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+    let hoursStr = (hours < 10) ? "0" + hours : hours;
+    let minutesStr = (minutes < 10) ? "0" + minutes : minutes;
+    let secondsStr = (seconds < 10) ? "0" + seconds : seconds;
+
+    return `${hoursStr}h${minutesStr}m${secondsStr}.${milliseconds}s`;
+}
+
 const commands:any = fs.readdirSync(__dirname + "/commands").filter(file => file.endsWith(".js"));
 for(const file of commands) {
     const command = require(`./commands/${file}`);
@@ -45,6 +58,8 @@ client.on("message", async message => {
         let resources:ResourcesObject = {message, client, cache, prefix};
         if(!cache.leaderboard.finished) {
             message.channel.send(`**Note: Dredbot is still collecting ships, and any ship with less than ${cache.leaderboard.currentOffset} points in any ship-realted command will not be shown.**`);
+        } else {
+            message.channel.send(`**Ships last updated ${millisecondsToMinSeconds(Date.now() - cache.leaderboard.last.finishedTime)} minutes ago.**`);
         }
         await command!.execute(resources);
         console.log(`[${new Date().toUTCString()}] Command "${commandName}" executed in "${message.guild.name}"`);
