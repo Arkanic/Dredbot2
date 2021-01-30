@@ -59,7 +59,10 @@ let cache:Cache = {
         ships: [],
         finished: false,
         currentOffset:0,
-        lastFinished:0
+        last: {
+            startedTime:0,
+            finishedTime:0
+        }
     }
 };
 
@@ -71,15 +74,18 @@ let shipGetter = new ShipGetter((ships) => {
     cache.leaderboard.currentOffset = ships[ships.length-1].score;
 }, (endOffset) => {
     // on finish
-    cache.leaderboard.lastFinished = Date.now();
+    cache.leaderboard.last.finishedTime = Date.now();
+    cache.leaderboard.finished = true;
     console.log(`Finished collecting ships, ended at offset ${endOffset}`);
 });
 shipGetter.getShips();
+cache.leaderboard.last.startedTime = Date.now();
 setInterval(() => {
     cache.leaderboard.ships = [];
     cache.leaderboard.finished = false;
     cache.leaderboard.currentOffset = 0;
     shipGetter.getShips();
+    cache.leaderboard.last.startedTime = Date.now();
 }, 1000*60*60)
 
 client.login(config.key);

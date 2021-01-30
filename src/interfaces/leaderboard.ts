@@ -4,5 +4,8 @@ export default interface Leaderboard {
     ships:Array<Ship>;
     finished:boolean;
     currentOffset:number;
-    lastFinished:number;
+    last: {
+        finishedTime:number,
+        startedTime:number,
+    }
 }
