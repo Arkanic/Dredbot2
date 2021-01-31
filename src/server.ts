@@ -3,7 +3,7 @@ const app:Express.Application = Express();
 app.get("/", function(req, res) {
     res.send("online");
 });
-
+app.listen(process.env.PORT||8080);
 
 import Discord from "discord.js";
 import Enmap from "enmap";
