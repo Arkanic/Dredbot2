@@ -1,6 +1,8 @@
 import Discord from "discord.js";
 import Enmap from "enmap";
 import fs from "fs";
+import Lowdb from "lowdb";
+import FileSync from "lowdb/adapters/FileSync";
 
 import Client from "./handler/client";
 import ShipGetter from "./cache/leaderboard";
@@ -92,6 +94,21 @@ let shipGetter = new ShipGetter((ships) => {
     cache.leaderboard.last.finishedTime = Date.now();
     cache.leaderboard.finished = true;
     console.log(`Finished collecting ships, ended at offset ${endOffset}`);
+
+    let hours:number = Math.floor(cache.leaderboard.last.finishedTime/1000/60/60);
+    const adapter = new FileSync(`ships/ships-${hours}.json`);
+    const db = Lowdb(adapter);
+    db.defaults({ships:[], startedTime:0, finishedTime:0})
+        .write();
+    db.set("startedTime", cache.leaderboard.last.startedTime)
+        .write();
+    db.set("finishedTime", cache.leaderboard.last.finishedTime)
+        .write();
+    db.set("ships", cache.leaderboard.ships)
+        .write()
+        .then(() => {
+            console.log(`Most recent ships saved to ships/ships-${hours}.json`);
+        });
 });
 shipGetter.getShips();
 cache.leaderboard.last.startedTime = Date.now();
@@ -101,6 +118,6 @@ setInterval(() => {
     cache.leaderboard.currentOffset = 0;
     shipGetter.getShips();
     cache.leaderboard.last.startedTime = Date.now();
-}, 1000*60*60)
+}, 1000*60*60*2)
 
 client.login(config.key);
