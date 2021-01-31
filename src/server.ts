@@ -105,10 +105,7 @@ let shipGetter = new ShipGetter((ships) => {
     db.set("finishedTime", cache.leaderboard.last.finishedTime)
         .write();
     db.set("ships", cache.leaderboard.ships)
-        .write()
-        .then(() => {
-            console.log(`Most recent ships saved to ships/ships-${hours}.json`);
-        });
+        .write();
 });
 shipGetter.getShips();
 cache.leaderboard.last.startedTime = Date.now();
