@@ -1,3 +1,10 @@
+import Express from "express";
+const app:Express.Application = Express();
+app.get("/", function(req, res) {
+    res.send("online");
+});
+
+
 import Discord from "discord.js";
 import Enmap from "enmap";
 import fs from "fs";
