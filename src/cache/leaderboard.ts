@@ -54,4 +54,8 @@ export default class {
             this.cycleShipsChunk(response.body.ships[0].score);
         });
     }
+
+    reset():void {
+      this.position = 1;
+    }
 }

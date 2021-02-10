@@ -120,6 +120,7 @@ setInterval(() => {
     cache.leaderboard.ships = [];
     cache.leaderboard.finished = false;
     cache.leaderboard.currentOffset = 0;
+    shipGetter.reset();
     shipGetter.getShips();
     cache.leaderboard.last.startedTime = Date.now();
 }, 1000*60*60*2)
