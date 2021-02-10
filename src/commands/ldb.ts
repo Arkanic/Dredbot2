@@ -29,7 +29,10 @@ let ldb = {
 
             let msg:string = "";
 
+            let totalPoints:number = 0;
+
             for(let i = 0; i < matches.length; i++) {
+                totalPoints += matches[i].score;
                 let msgLine = shipString(matches[i]);
                 if((msg + msgLine).length <= 2000) {
                     msg += msgLine;
@@ -40,6 +43,7 @@ let ldb = {
             
             loadingMessage.delete();
             message.channel.send(msg || "**[No Results]**");
+            message.channel.send(`Total points for term "${query}": **${totalPoints}**`);
         });
     }
 }
