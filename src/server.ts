@@ -6,10 +6,7 @@ app.get("/", function(req, res) {
 app.listen(process.env.PORT||8080);
 
 import Discord from "discord.js";
-import Enmap from "enmap";
 import fs from "fs";
-import Lowdb from "lowdb";
-import FileSync from "lowdb/adapters/FileSync";
 
 import Client from "./handler/client";
 import ShipGetter from "./cache/leaderboard";
@@ -23,6 +20,9 @@ const config = require("../config.json");
 const client:Client = new Client(config);
 client.commands = new Discord.Collection();
 
+/**
+ * turns miliseconds (the return value of Date.now()) into a string with the format "<h>h<m>m<s>.<ms>s"
+ */
 function millisecondsToMinSeconds(duration:number):string {
     let milliseconds = Math.floor((duration % 1000) / 100);
     let seconds = Math.floor((duration / 1000) % 60);
@@ -101,18 +101,6 @@ let shipGetter = new ShipGetter((ships) => {
     cache.leaderboard.last.finishedTime = Date.now();
     cache.leaderboard.finished = true;
     console.log(`Finished collecting ships, ended at offset ${endOffset}`);
-
-    let hours:number = Math.floor(cache.leaderboard.last.finishedTime/1000/60/60);
-    const adapter = new FileSync(`ships/ships-${hours}.json`);
-    const db = Lowdb(adapter);
-    db.defaults({ships:[], startedTime:0, finishedTime:0})
-        .write();
-    db.set("startedTime", cache.leaderboard.last.startedTime)
-        .write();
-    db.set("finishedTime", cache.leaderboard.last.finishedTime)
-        .write();
-    db.set("ships", cache.leaderboard.ships)
-        .write();
 });
 shipGetter.getShips();
 cache.leaderboard.last.startedTime = Date.now();

@@ -8,12 +8,15 @@ export default class {
     position:number;
 
     constructor(onChunk:(ships:Array<Ship>) => void, onFinish:(endOffset:number) => void) {
-        this.handleFinish = onFinish;
-        this.handleChunk = onChunk;
-        this.url = "https://master.drednot.io/api/scoreboard";
-        this.position = 1;
+        this.handleFinish = onFinish; // on finish received function, returns final offset
+        this.handleChunk = onChunk; // on chunk received function, returns parsed ships for that particular chunk
+        this.url = "https://master.drednot.io/api/scoreboard"; // api endpoint
+        this.position = 1; // ship position (e.g. top scoring ship has position "1")
     }
 
+    /**
+     * Returns a promise with the api result for 1k ships below offset_score
+     */
     private getShipsChunk(offset_score:number):Promise<{[unit:string]:any}> {
         return new Promise(resolve => {
             needle.get(`${this.url}?offset_score=${offset_score}`, (err, response) => {
@@ -23,6 +26,10 @@ export default class {
         });
     }
 
+
+    /**
+     * Handles a single chunk of ship data, and loops to the next chunk if possible
+     */
     private cycleShipsChunk(offset_score:number):void {
         this.getShipsChunk(offset_score).then(rawShips => {
             let ships:Array<Ship> = [];
@@ -48,6 +55,10 @@ export default class {
         });
     }
 
+
+    /**
+     * Start the ship-getting cycle
+     */
     getShips():void {
         needle.get(this.url, (err, response) => {
             if(err) throw err;
@@ -55,6 +66,9 @@ export default class {
         });
     }
 
+    /**
+     * Reset everything
+     */
     reset():void {
       this.position = 1;
     }
