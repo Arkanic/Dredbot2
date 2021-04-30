@@ -45,7 +45,7 @@ export default class {
             }
             this.handleChunk(ships);
             let newOffset = ships[ships.length-1].score;
-            if(newOffset < offset_score) {
+            if(newOffset < offset_score && newOffset > 0) {
                 setTimeout(() => {
                     this.cycleShipsChunk(newOffset);
                 }, 500); // don't request ships too fast
