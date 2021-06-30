@@ -1,11 +1,27 @@
 import {Client, Collection} from "discord.js";
+import ResourcesObject from "../interfaces/resourcesObject";
+
+
+export interface Command {
+    name:string;
+    execute(resources:ResourcesObject):void;
+}
 
 export default class extends Client {
-    config:{[unit:string]:any};
-    commands:Collection<string, {[unit:string]:any}>;
-    constructor(config:{[unit:string]:any}) {
+    config:{
+        key:string;
+        prefix:string;
+    };
+    commands:Collection<string, {[unit:string]:Command}>;
+    constructor() {
         super();
         this.commands = new Collection();
-        this.config = config;
+
+        if(!process.env.TOKEN) console.error("process.env.TOKEN is non-existant! please set this to the bot token.");
+        if(!process.env.PREFIX) console.error("process.env.PREFIX is non-existant! please set this to the bot prefix.");
+        this.config = {
+            key: process.env.TOKEN as string,
+            prefix: process.env.PREFIX as string
+        };
     }
 }

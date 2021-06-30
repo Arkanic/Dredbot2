@@ -7,17 +7,20 @@ app.listen(process.env.PORT||8080);
 
 import Discord from "discord.js";
 import fs from "fs";
+import dotenv from "dotenv";
 
-import Client from "./handler/client";
+import Client, { Command } from "./handler/client";
 import ShipGetter from "./cache/leaderboard";
 import leaderboard from "./cache/leaderboard";
 
 import Cache from "./interfaces/cache";
 import ResourcesObject from "./interfaces/resourcesObject";
 
-const config = require("../config.json");
+dotenv.config({
+    path: ".env"
+});
 
-const client:Client = new Client(config);
+const client:Client = new Client();
 client.commands = new Discord.Collection();
 
 /**
@@ -52,12 +55,12 @@ client.on("message", async message => {
     if(message.author.bot) return;
 
 
-    let prefix = config.prefix;
+    let prefix = client.config.prefix;
     if(!message.content.startsWith(prefix)) return;
 
     let args = message.content.slice(prefix.length).split(/ +/);
     const commandName = args.shift()!.toLowerCase();
-    const command = client.commands.get(commandName);
+    const command:{[unit:string]:Command}|undefined = client.commands.get(commandName);
 
     if(!command) {
         return message.react("🤔");
@@ -70,7 +73,7 @@ client.on("message", async message => {
         } else {
             message.channel.send(`**Ships last updated ${millisecondsToMinSeconds(Date.now() - cache.leaderboard.last.finishedTime)} ago.**`);
         }
-        await command!.execute(resources);
+        await (command as unknown as Command).execute(resources);
         console.log(`[${new Date().toUTCString()}] Command "${commandName}" executed in "${message.guild.name}"`);
     } catch(error) {
         message.channel.send(`\`\`\`${error}\`\`\``);
@@ -113,4 +116,4 @@ setInterval(() => {
     cache.leaderboard.last.startedTime = Date.now();
 }, 1000*60*60*2)
 
-client.login(config.key);
+client.login(client.config.key);
