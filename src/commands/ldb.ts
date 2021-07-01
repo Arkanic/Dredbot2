@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import Ship from "../interfaces/ship";
 import ResourcesObject from "../interfaces/resourcesObject";
+import {Command} from "../handler/client";
 
 /**
  * Turns a number into a string with comma notation (e.g. 1234 becomes "1,234")
@@ -25,8 +26,9 @@ function shipString(ship:Ship):string {
     return `\n**${commaNumber(ship.position)}** \`${ship.name} {${ship.hex}}\` (${commaNumber(ship.score)}pts)`;
 }
 
-let ldb = {
+let ldb:Command = {
     name: "ldb",
+    description: "Search through all ships in Drednot",
     execute(resources:ResourcesObject):void {
         let {message, cache, prefix} = resources;
 

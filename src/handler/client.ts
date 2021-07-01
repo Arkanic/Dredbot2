@@ -4,6 +4,8 @@ import ResourcesObject from "../interfaces/resourcesObject";
 
 export interface Command {
     name:string;
+    description:string;
+    unlisted?:boolean;
     execute(resources:ResourcesObject):void;
 }
 
