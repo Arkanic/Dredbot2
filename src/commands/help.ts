@@ -7,7 +7,7 @@ let cmd:Command = {
     name: "help",
     description: "List all commands and their descriptions",
     execute(resources:ResourcesObject) {
-        let {message, client, prefix} = resources;
+        let {message, prefix} = resources;
         let li = "";
 
         const commandNames = fs.readdirSync(__dirname).filter(file => file.endsWith(".js"));
