@@ -9,12 +9,13 @@ import Discord from "discord.js";
 import fs from "fs";
 import dotenv from "dotenv";
 
-import Client, { Command } from "./handler/client";
-import ShipGetter from "./cache/leaderboard";
-import leaderboard from "./cache/leaderboard";
+import Client, {Command} from "./handler/client";
 
 import Cache from "./interfaces/cache";
+import {cache} from "./cache";
 import ResourcesObject from "./interfaces/resourcesObject";
+
+import {millisecondsToMinSeconds} from "./utils/formatting";
 
 dotenv.config({
     path: ".env"
@@ -22,22 +23,6 @@ dotenv.config({
 
 const client:Client = new Client();
 client.commands = new Discord.Collection();
-
-/**
- * turns miliseconds (the return value of Date.now()) into a string with the format "<h>h<m>m<s>.<ms>s"
- */
-function millisecondsToMinSeconds(duration:number):string {
-    let milliseconds = Math.floor((duration % 1000) / 100);
-    let seconds = Math.floor((duration / 1000) % 60);
-    let minutes = Math.floor((duration / (1000 * 60)) % 60);
-    let hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
-
-    let hoursStr = (hours < 10) ? "0" + hours : hours;
-    let minutesStr = (minutes < 10) ? "0" + minutes : minutes;
-    let secondsStr = (seconds < 10) ? "0" + seconds : seconds;
-
-    return `${hoursStr}h${minutesStr}m${secondsStr}.${milliseconds}s`;
-}
 
 const commands:any = fs.readdirSync(__dirname + "/commands").filter(file => file.endsWith(".js"));
 for(const file of commands) {
@@ -80,40 +65,5 @@ client.on("message", async message => {
         console.log(error);
     }
 });
-
-let cache:Cache = {
-    leaderboard: {
-        ships: [],
-        finished: false,
-        currentOffset:0,
-        last: {
-            startedTime:0,
-            finishedTime:0
-        }
-    }
-};
-
-let shipGetter = new ShipGetter((ships) => {
-    // on chunk
-    for(let i in ships) {
-        cache.leaderboard.ships.push(ships[i]);
-    }
-    cache.leaderboard.currentOffset = ships[ships.length-1].score;
-}, (endOffset) => {
-    // on finish
-    cache.leaderboard.last.finishedTime = Date.now();
-    cache.leaderboard.finished = true;
-    console.log(`Finished collecting ships, ended at offset ${endOffset}`);
-});
-shipGetter.getShips();
-cache.leaderboard.last.startedTime = Date.now();
-setInterval(() => {
-    cache.leaderboard.ships = [];
-    cache.leaderboard.finished = false;
-    cache.leaderboard.currentOffset = 0;
-    shipGetter.reset();
-    shipGetter.getShips();
-    cache.leaderboard.last.startedTime = Date.now();
-}, 1000*60*60*2)
 
 client.login(client.config.key);
