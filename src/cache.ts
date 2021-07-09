@@ -1,5 +1,7 @@
 import Cache from "./interfaces/cache";
+import DredPlayers, * as dp from "./interfaces/dredplayers";
 import ShipGetter from "./cache/leaderboard";
+import ws from "ws";
 
 export let cache:Cache = {
     leaderboard: {
@@ -10,9 +12,18 @@ export let cache:Cache = {
             startedTime:0,
             finishedTime:0
         }
-    }
+    },
+    players: [
+        new DredPlayers("wss://d0.drednot.io:4000", "US"),
+        new DredPlayers("wss://d1.drednot.io:4000", "Poland"),
+        new DredPlayers("wss://s2.drednot.io:4000", "Singapore"),
+        new DredPlayers("wss://t0.drednot.io:4000", "Test")
+    ]
 };
 
+//
+// leaderboard
+//
 let shipGetter = new ShipGetter((ships) => {
     // on chunk
     for(let i in ships) {
@@ -35,3 +46,15 @@ setInterval(() => {
     shipGetter.getShips();
     cache.leaderboard.last.startedTime = Date.now();
 }, 1000*60*60*2);
+
+//
+// Players
+//
+for(let i in cache.players) {
+    cache.players[i].ping();
+}
+setInterval(() => {
+    for(let i in cache.players) {
+        cache.players[i].ping();
+    }
+}, 1000 * 30);
