@@ -1,5 +1,5 @@
 import Cache from "./interfaces/cache";
-import DredPlayers, * as dp from "./interfaces/dredplayers";
+import DredPlayers, * as dp from "./cache/dredplayers";
 import ShipGetter from "./cache/leaderboard";
 import ws from "ws";
 
