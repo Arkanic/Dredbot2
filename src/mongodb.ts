@@ -43,7 +43,7 @@ export function insertLeaderboard(finishTime:number, ships:Array<Ship>) {
         if(!results) return;
         if(results.length != 0) duplicate = true;
     });
-    if(duplicate) return;
+    if(duplicate) return console.log("Mongodb not pushing current ships, as Duplicate....");
 
     leaderboards.insertOne(obj, (err, res) => {
         if(err) throw err;
@@ -51,8 +51,8 @@ export function insertLeaderboard(finishTime:number, ships:Array<Ship>) {
     });
 
     console.log("Checking for old db entries...");
-    let now = Math.floor(Date.now() / 1000 / 60 / 60);
-    let tooOld = now - 30 * 24;
+    let now = Math.floor(Date.now() / 1000 / 60 / 60 / 2);
+    let tooOld = now - 30 * 12;
     leaderboards.find({}).toArray((err, results) => {
         if(err) throw err;
         let oldOnes = [];
