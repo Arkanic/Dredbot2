@@ -43,7 +43,7 @@ export function insertLeaderboard(finishTime:number, ships:Array<Ship>) {
         if(!results) return;
         if(results.length == 0) return;
 
-        if(results[results.length - 1].hour == hour) duplicate = true;
+        if(results[results.length - 1].hour == Math.floor(finishTime / 1000 / 60 / 60 / 3)) duplicate = true;
     });
     if(duplicate) return console.log("Mongodb not pushing current ships, as Duplicate....");
 
