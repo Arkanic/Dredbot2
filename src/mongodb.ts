@@ -40,6 +40,7 @@ export function insertLeaderboard(finishTime:number, ships:Array<Ship>) {
     leaderboards.findOne({}, (err, results) => {
         if(err) throw err;
 
+        if(!results) return;
         if(results.length != 0) duplicate = true;
     });
     if(duplicate) return;
