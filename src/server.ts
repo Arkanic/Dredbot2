@@ -11,7 +11,9 @@ import dotenv from "dotenv";
 
 import Client, {Command} from "./handler/client";
 
-import Cache from "./interfaces/cache";
+import * as MongoDB from "./mongodb";
+MongoDB.start();
+
 import {cache} from "./cache";
 import ResourcesObject from "./interfaces/resourcesObject";
 

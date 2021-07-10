@@ -1,7 +1,7 @@
 import Cache from "./interfaces/cache";
 import DredPlayers, * as dp from "./cache/dredplayers";
 import ShipGetter from "./cache/leaderboard";
-import ws from "ws";
+import * as MongoDB from "./mongodb";
 
 export let cache:Cache = {
     leaderboard: {
@@ -34,6 +34,7 @@ let shipGetter = new ShipGetter((ships) => {
     // on finish
     cache.leaderboard.last.finishedTime = Date.now();
     cache.leaderboard.finished = true;
+    MongoDB.insertLeaderboard(cache.leaderboard.last.finishedTime, cache.leaderboard.ships);
     console.log(`Finished collecting ships, ended at offset ${endOffset}`);
 });
 shipGetter.getShips();
@@ -42,7 +43,19 @@ setInterval(() => {
     cache.leaderboard.ships = [];
     cache.leaderboard.finished = false;
     cache.leaderboard.currentOffset = 0;
-    shipGetter.reset();
+    shipGetter = new ShipGetter((ships) => {
+        // on chunk
+        for(let i in ships) {
+            cache.leaderboard.ships.push(ships[i]);
+        }
+        cache.leaderboard.currentOffset = ships[ships.length-1].score;
+    }, (endOffset) => {
+        // on finish
+        cache.leaderboard.last.finishedTime = Date.now();
+        cache.leaderboard.finished = true;
+        MongoDB.insertLeaderboard(cache.leaderboard.last.finishedTime, cache.leaderboard.ships);
+        console.log(`Finished collecting ships, ended at offset ${endOffset}`);
+    });
     shipGetter.getShips();
     cache.leaderboard.last.startedTime = Date.now();
 }, 1000*60*60*2);
