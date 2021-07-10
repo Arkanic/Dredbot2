@@ -58,7 +58,7 @@ setInterval(() => {
     });
     shipGetter.getShips();
     cache.leaderboard.last.startedTime = Date.now();
-}, 1000*60*60*2);
+}, 1000*60*60*3);
 
 //
 // Players
