@@ -1,4 +1,5 @@
 import Discord from "discord.js";
+import * as MongoDB from "mongodb";
 import Cache from "./cache";
 
 export default interface ResourcesObject {
@@ -6,4 +7,5 @@ export default interface ResourcesObject {
     client:Discord.Client;
     cache:Cache;
     prefix:string;
+    mongodb:MongoDB.Db;
 }

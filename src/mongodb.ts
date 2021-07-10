@@ -12,8 +12,8 @@ const client = new MongoClient(process.env.MONGODB as string, {
     useUnifiedTopology: true
 });
 
-let db:mongodb.Db;
-let leaderboards:mongodb.Collection;
+export let db:mongodb.Db;
+export let leaderboards:mongodb.Collection;
 
 export function start() {
     client.connect((err) => {
