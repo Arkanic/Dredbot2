@@ -45,7 +45,7 @@ export function insertLeaderboard(finishTime:number, ships:Array<Ship>) {
 
     console.log("Checking for old db entries...");
     let now = Math.floor(Date.now() / 1000 / 60 / 60);
-    let tooOld = now - 30 * 12;
+    let tooOld = now - 24 * 15;
     leaderboards.find({}).toArray((err, results) => {
         if(err) throw err;
         let oldOnes = [];
