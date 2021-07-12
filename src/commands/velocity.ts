@@ -28,7 +28,6 @@ function shipString(position: number, ship: Ship): string {
 let cmd: Command = {
     name: "velocity",
     description: "Show which ships are changing in points the most",
-    unlisted: true,
     execute(resources: ResourcesObject): void {
         let { message, mongodb } = resources;
         let leaderboards = mongodb.collection("dredbot");
@@ -58,9 +57,21 @@ let cmd: Command = {
                         ships.push(oldShip);
                     }
 
-                    ships.sort((a, b) => {
-                        return b.score - a.score
-                    });
+                    let vArg = message.content.split(" ")[1] || "";
+                    vArg = (vArg.length > 0 && vArg.toLowerCase().startsWith("l")) ? "lower" : "higher";
+
+                    // this may seem like repetition,
+                    // but it actually makes the if statement have to run once
+                    // rather than 100k times.
+                    let sortingMethod:null|((a:Ship, b:Ship) => number);
+                    if(vArg == "higher") sortingMethod = (a, b) => {
+                        return b.score - a.score;
+                    }
+                    else sortingMethod = (a, b) => {
+                        return a.score - b.score;
+                    }
+
+                    ships.sort(sortingMethod);
 
 
                     loadingMessage.delete();
