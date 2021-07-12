@@ -44,10 +44,11 @@ let cmd: Command = {
                 if (results.length < 2) capable = false;
 
                 if (capable) {
-                    let older = results[0];
-                    let newer = results[results.length - 1];
+                    let older = results[0].ships;
+                    let newer = results[results.length - 1].ships;
 
                     let ships = [];
+
                     // uh oh slow
                     for (let i in older) {
                         let oldShip = older[i] as Ship;
@@ -58,8 +59,9 @@ let cmd: Command = {
                     }
 
                     ships.sort((a, b) => {
-                        return a.score - b.score
+                        return b.score - a.score
                     });
+
 
                     loadingMessage.delete();
 
