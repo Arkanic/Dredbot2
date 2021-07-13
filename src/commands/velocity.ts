@@ -12,13 +12,6 @@ function commaNumber(num: number): string {
 }
 
 /**
- * limits the length of a string
- */
-function limitString(string: string, length: number): string {
-    return string.substring(0, length);
-}
-
-/**
  * Transforms a Ship object into a string that is sent to discord
  */
 function shipString(position: number, ship: Ship): string {
@@ -63,6 +56,7 @@ let cmd: Command = {
                     // this may seem like repetition,
                     // but it actually makes the if statement have to run once
                     // rather than 100k times.
+                    // TODO: implement something like timsort
                     let sortingMethod:null|((a:Ship, b:Ship) => number);
                     if(vArg == "higher") sortingMethod = (a, b) => {
                         return b.score - a.score;

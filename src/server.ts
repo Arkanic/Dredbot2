@@ -8,6 +8,7 @@ app.listen(process.env.PORT||8080);
 import Discord from "discord.js";
 import fs from "fs";
 import dotenv from "dotenv";
+import Logger from "./utils/logger";
 
 import Client, {Command} from "./handler/client";
 
@@ -23,6 +24,8 @@ dotenv.config({
     path: ".env"
 });
 
+const logger = new Logger("main", "blue");
+
 const client:Client = new Client();
 client.commands = new Discord.Collection();
 
@@ -30,11 +33,11 @@ const commands:any = fs.readdirSync(__dirname + "/commands").filter(file => file
 for(const file of commands) {
     const command = require(`./commands/${file}`);
     client.commands.set(command.name, command);
-    console.log(`Loaded ${command.name}`);
+    logger.log(`Loaded ${command.name}`);
 }
 
 client.once("disconnect", () => {
-    console.log("Disconnect");
+    logger.critical("Disconnect");
 });
 
 client.on("message", async message => {
@@ -61,10 +64,10 @@ client.on("message", async message => {
             message.channel.send(`**Ships last updated ${millisecondsToMinSeconds(Date.now() - cache.leaderboard.last.finishedTime)} ago.**`);
         }
         await (command as unknown as Command).execute(resources);
-        console.log(`[${new Date().toUTCString()}] Command "${commandName}" executed in "${message.guild.name}"`);
+        logger.log(`[${new Date().toUTCString()}] Command "${commandName}" executed in "${message.guild.name}"`);
     } catch(error) {
         message.channel.send(`\`\`\`${error}\`\`\``);
-        console.log(error);
+        logger.error(error);
     }
 });
 

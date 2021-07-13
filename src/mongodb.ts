@@ -1,11 +1,14 @@
 import mongodb, {MongoClient} from "mongodb";
 import dotenv from "dotenv";
+import Logger from "./utils/logger";
 
 import Ship from "./interfaces/ship";
 
 dotenv.config({
     path: ".env"
 });
+
+const logger = new Logger("mongodb", "red");
 
 const client = new MongoClient(process.env.MONGODB as string, {
     useNewUrlParser: true,
@@ -22,7 +25,7 @@ export function start() {
         db = client.db("Cluster0");
         leaderboards = db.collection("dredbot");
 
-        console.log("Mongodb connected");
+        logger.success("Mongodb connected");
     });
 }
 
@@ -36,14 +39,15 @@ export function insertLeaderboard(finishTime:number, ships:Array<Ship>) {
         hour,
         ships
     }
-    if(hour % 12 != 0) return console.log("Not the right time to insert DB, skipping...");
+    if(process.env.SAVETOMONGODB != "yes") return logger.info("Not inserting to DB, as it is turned off via constants.");
+    if(hour % 12 != 0) return logger.info("Not the right time to insert DB, skipping...");
 
     leaderboards.insertOne(obj, (err, res) => {
         if(err) throw err;
-        console.log("Inserted leaderboard into db");
+        logger.success("Inserted leaderboard into db");
     });
 
-    console.log("Checking for old db entries...");
+    logger.info("Checking for old db entries...");
     let now = Math.floor(Date.now() / 1000 / 60 / 60);
     let tooOld = now - 24 * 15;
     leaderboards.find({}).toArray((err, results) => {
@@ -60,8 +64,9 @@ export function insertLeaderboard(finishTime:number, ships:Array<Ship>) {
             let query = {hour:oldOne.hour};
             leaderboards.deleteOne(query, (err, obj) => {
                 if(err) throw err;
-                console.log(`Old DB entry ${oldOne.hour} deleted.`);
+                logger.info(`Old DB entry ${oldOne.hour} deleted.`);
             });
         }
+        if(oldOnes.length > 0) logger.success(`Attemped to delete ${oldOnes.length} db entries.`);
     });
 }
