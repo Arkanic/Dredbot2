@@ -1,3 +1,8 @@
+## 14/7/21 b2
+- Added colourful command logging, because why not
+- Added an actual installation manual to `README.md`
+- Some miscellaneous stuff
+
 ## 13/7/21 b1
 - Finally started making changelogs
 - Dredbot now connects to a mongodb server and uses that as storage for previous ships
