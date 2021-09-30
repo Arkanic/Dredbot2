@@ -1,6 +1,8 @@
 # dredbot2
 dredbot, re-written
 
+CURRNENTLY NOT WORKING DUE TO DISCORD.JS UPDATES (no idea what they were thinking)
+
 ## Installation
 
 ### Global
